@@ -34,7 +34,7 @@
             android:summary="@string/auto_hbm_summary"
             android:title="@string/auto_hbm_title" />
 
-        <org.evolution.device.DeviceSettings.AutoHBMThresholdPreference
+        <com.derp.device.DeviceSettings.AutoHBMThresholdPreference
             android:key="auto_hbm_threshold"
             android:title="@string/auto_hbm_threshold_title"
             android:summary="@string/auto_hbm_threshold_summary" />
@@ -46,8 +46,8 @@
             android:summary="@string/panel_category_summary"
             android:persistent="false" >
             <intent android:action="android.intent.action.MAIN"
-                    android:targetPackage="org.evolution.device.DeviceSettings"
-                    android:targetClass="org.evolution.device.DeviceSettings.PanelSettingsActivity" />
+                    android:targetPackage="com.derp.device.DeviceSettings"
+                    android:targetClass="com.derp.device.DeviceSettings.PanelSettingsActivity" />
         </Preference>
     </PreferenceCategory>
 
@@ -80,8 +80,8 @@
         android:summary="@string/doze_settings_summary">
         <intent
                   android:action="android.intent.action.MAIN"
-                  android:targetPackage="org.evolution.settings.doze"
-                  android:targetClass="org.evolution.settings.doze.DozeSettingsActivity"/>
+                  android:targetPackage="com.derp.settings.doze"
+                  android:targetClass="com.derp.settings.doze.DozeSettingsActivity"/>
         </Preference>
     </PreferenceCategory>
 
@@ -152,7 +152,7 @@
         android:key="vibrator"
         android:title="@string/category_vibrator">
 
-        <org.evolution.device.DeviceSettings.VibratorStrengthPreference
+        <com.derp.device.DeviceSettings.VibratorStrengthPreference
             android:key="vib_strength"
             android:icon="@drawable/ic_vibration_icon"
             android:title="@string/vib_strength_title_head"
