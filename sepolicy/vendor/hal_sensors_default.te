@@ -77,3 +77,10 @@ allow hal_sensors_default property_socket:sock_file write;
 
 # Allow hal_sensors_default to connect to init:unix_stream_socket
 allow hal_sensors_default init:unix_stream_socket connectto;
+
+allow hal_sensors_default exported3_system_prop:file read;
+allow hal_sensors_default exported3_system_prop:file open;
+
+allow hal_sensors_default exported3_system_prop:file getattr;
+
+

@@ -1,0 +1,2 @@
+allow installd op1_file:filesystem quotaget;
+

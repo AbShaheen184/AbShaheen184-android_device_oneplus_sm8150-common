@@ -28,3 +28,11 @@ allow hal_audio_default unlabeled:dir search;
 allow hal_audio_default audio_prop:file read;
 allow hal_audio_default sysfs:dir read;
 allow hal_audio_default sysfs_wake_lock:file write;
+allow hal_audio_default audio_prop:file open;
+allow hal_audio_default sysfs:dir open;
+allow hal_audio_default sysfs_wake_lock:file open;
+
+allow hal_audio_default audio_prop:file getattr;
+allow hal_audio_default self:capability2 block_suspend;
+allow hal_audio_default audio_prop:file map;
+
