@@ -249,7 +249,8 @@ PRODUCT_PACKAGES += \
 
 # Doze
 PRODUCT_PACKAGES += \
-    OnePlusDoze
+    OnePlusDoze \
+    TouchGestures
 
 # DRM
 PRODUCT_PACKAGES += \
