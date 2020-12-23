@@ -9,8 +9,9 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/updatable_apex.mk)
 # Get non-open-source specific aspects
 $(call inherit-product-if-exists, vendor/oneplus/sm8150-common/sm8150-common-vendor.mk)
 
-# Inherit packages from vendor/addons/oneplus/camera
-$(call inherit-product-if-exists, vendor/addons/oneplus/camera/config.mk)
+# Inherit packages from OPCamera
+$(call inherit-product, device/oneplus/opcamera/opcamera-vendor.mk)
+# $(call inherit-product, vendor/addons/onepluscamera/config.mk)
 
 # Additional native libraries
 PRODUCT_COPY_FILES += \
