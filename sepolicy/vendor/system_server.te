@@ -10,4 +10,6 @@ allow system_server camera_data_file:dir search;
 allow system_server hal_light_default:process signal;
 allow system_server app_zygote:process getpgid;
 
-
+allow system_server proc_touchpanel:dir search;
+allow system_server proc_ultrasound:dir search;
+allow system_server vendor_proc_shs:dir search;

@@ -10,4 +10,6 @@ dontaudit priv_app mnt_vendor_file:dir search;
 allow priv_app hal_memtrack_hwservice:hwservice_manager find;
 allow priv_app default_android_service:service_manager find;
 allow priv_app hal_memtrack_default:binder call;
+allow platform_app vendor_sysfs_battery_supply:file read;
+
 
