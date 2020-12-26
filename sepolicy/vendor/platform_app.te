@@ -1,0 +1,4 @@
+allow platform_app default_android_service:service_manager find;
+allow platform_app vendor_sysfs_battery_supply:dir search;
+allow platform_app hal_cameraHIDL_hwservice:hwservice_manager find;
+

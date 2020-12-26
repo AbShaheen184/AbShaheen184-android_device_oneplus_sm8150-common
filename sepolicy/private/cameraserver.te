@@ -4,6 +4,11 @@ allow cameraserver camera_data_file:dir search;
 allow cameraserver unlabeled:file write;
 allow cameraserver unlabeled:file open;
 allow cameraserver unlabeled:file read;
+allow cameraserver unlabeled:file getattr;
+
+
+# For OP Camera watermark.
+allow cameraserver camera_data_file:dir write;
 
 
 
