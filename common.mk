@@ -89,7 +89,8 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/vendor.lineage.biometrics.fingerprint.inscreen.xml:system/etc/permissions/vendor.lineage.biometrics.fingerprint.inscreen.xml \
     $(LOCAL_PATH)/configs/privapp-permissions-oem.xml:system/etc/permissions/privapp-permissions-oem.xml \
     $(LOCAL_PATH)/configs/com.android.storagemanager.xml:system/etc/permissions/com.android.storagemanager.xml \
-    $(LOCAL_PATH)/configs/hiddenapi-package-whitelist-oneplus.xml:system/etc/permissions/hiddenapi-package-whitelist-oneplus.xml
+    $(LOCAL_PATH)/configs/hiddenapi-package-whitelist-oneplus.xml:system/etc/permissions/hiddenapi-package-whitelist-oneplus.xml \
+    $(LOCAL_PATH)/configs/net.oneplus.launcher.xml:system/etc/permissions/net.oneplus.launcher.xml
 
 # ANT+
 PRODUCT_PACKAGES += \
