@@ -9,6 +9,8 @@ allow cameraserver unlabeled:file getattr;
 
 # For OP Camera watermark.
 allow cameraserver camera_data_file:dir write;
+allow cameraserver camera_data_file:dir add_name;
+
 
 
 
