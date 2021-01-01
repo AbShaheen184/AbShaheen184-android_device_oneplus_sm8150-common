@@ -16,6 +16,9 @@ $(call inherit-product, device/oneplus/opcamera/opcamera-vendor.mk)
 # Additional native libraries
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/public.libraries.txt:$(TARGET_COPY_OUT_VENDOR)/etc/public.libraries.txt
+    
+# Ccache 
+USE_CCACHE := 1
 
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += \
