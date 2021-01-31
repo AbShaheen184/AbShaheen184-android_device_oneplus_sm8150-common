@@ -1,60 +1,45 @@
 #!/bin/bash
 #
-# Copyright (C) 2018-2019 The LineageOS Project
+# Copyright (C) 2016 The CyanogenMod Project
+# Copyright (C) 2017-2020 The LineageOS Project
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# SPDX-License-Identifier: Apache-2.0
 #
 
 set -e
+
+DEVICE_COMMON=sm8150-common
+VENDOR=oneplus
 
 # Load extract_utils and do some sanity checks
 MY_DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "${MY_DIR}" ]]; then MY_DIR="${PWD}"; fi
 
-EVO_ROOT="${MY_DIR}"/../../..
+ANDROID_ROOT="${MY_DIR}/../../.."
 
-HELPER="${EVO_ROOT}/vendor/evolution/build/tools/extract_utils.sh"
+HELPER="${ANDROID_ROOT}/tools/extract-utils/extract_utils.sh"
 if [ ! -f "${HELPER}" ]; then
     echo "Unable to find helper script at ${HELPER}"
     exit 1
 fi
 source "${HELPER}"
 
-function blob_fixup() {
-    case "${1}" in
-    lib/libwfdnative.so)
-        sed -i "s/android.hidl.base@1.0.so/libhidlbase.so\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00/" "${2}"
-        ;;
-    lib64/libwfdnative.so)
-        sed -i "s/android.hidl.base@1.0.so/libhidlbase.so\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00/" "${2}"
-        ;;
-    etc/permissions/qti_libpermissions.xml)
-        sed -i -e 's|name=\"android.hidl.manager-V1.0-java|name=\"android.hidl.manager@1.0-java|g' "${2}"
-    ;;
-    vendor/lib/hw/camera.qcom.so | vendor/lib64/hw/camera.qcom.so)
-        sed -i "s/libhidltransport.so/qtimutex.so\x00\x00\x00\x00\x00\x00\x00\x00/" "${2}"
-        ;;
-    esac
-}
-
 # Default to sanitizing the vendor folder before extraction
 CLEAN_VENDOR=true
 
-SECTION=
+ONLY_COMMON=true
+ONLY_TARGET=
 KANG=
+SECTION=
 
 while [ "${#}" -gt 0 ]; do
     case "${1}" in
+        --only-common )
+                ONLY_COMMON=true
+                ;;
+        --only-target )
+                ONLY_TARGET=true
+                ;;
         -n | --no-cleanup )
                 CLEAN_VENDOR=false
                 ;;
@@ -76,33 +61,47 @@ if [ -z "${SRC}" ]; then
     SRC="adb"
 fi
 
-# Initialize the helper for common device
-setup_vendor "${DEVICE_COMMON}" "${VENDOR}" "${EVO_ROOT}" true "${CLEAN_VENDOR}"
-
-extract "${MY_DIR}/proprietary-files.txt" "${SRC}" \
-        "${KANG}" --section "${SECTION}"
-
-if [ -s "${MY_DIR}/../${DEVICE}/proprietary-files.txt" ]; then
-    # Reinitialize the helper for device
-    source "${MY_DIR}/../${DEVICE}/extract-files.sh"
-    setup_vendor "${DEVICE}" "${VENDOR}" "${EVO_ROOT}" false "${CLEAN_VENDOR}"
-
-    extract "${MY_DIR}/../${DEVICE}/proprietary-files.txt" "${SRC}" \
-            "${KANG}" --section "${SECTION}"
-fi
-
-COMMON_BLOB_ROOT="${EVO_ROOT}/vendor/${VENDOR}/${DEVICE_COMMON}/proprietary"
-
-#
-# Fix xml version
-#
-function fix_xml_version () {
-    sed -i \
-        's/xml version="2.0"/xml version="1.0"/' \
-        "$DEVICE_BLOB_ROOT"/"$1"
+function blob_fixup() {
+    case "${1}" in
+        vendor/etc/permissions/com.fingerprints.extension.xml )
+            sed -i "s/\/system\/framework\//\/vendor\/framework\//g" "${2}"
+            ;;
+        product/lib64/libdpmframework.so )
+            sed -i "s/libhidltransport.so/libcutils-v29.so\x00\x00\x00/" "${2}"
+            ;;
+        product/etc/permissions/qcnvitems.xml )
+            sed -i "s/\/system\/framework\//\/system\/product\/framework\//g" "${2}"
+            ;;
+        product/etc/permissions/vendor.qti.hardware.data.connection-V1.0-java.xml )
+            sed -i "s/xml version=\"2.0\"/xml version=\"1.0\"/" "${2}"
+            ;;
+        product/etc/permissions/vendor.qti.hardware.data.connection-V1.1-java.xml )
+            sed -i "s/xml version=\"2.0\"/xml version=\"1.0\"/" "${2}"
+            ;;
+        product/etc/permissions/vendor.qti.hardware.factory.xml )
+            sed -i "s/\/system\/framework\//\/system\/product\/framework\//g" "${2}"
+            ;;
+        product/etc/permissions/vendor-qti-hardware-sensorscalibrate.xml )
+            sed -i "s/\/system\/framework\//\/system\/product\/framework\//g" "${2}"
+            ;;
+    esac
 }
 
-fix_xml_version product/etc/permissions/vendor.qti.hardware.data.connection-V1.0-java.xml
-fix_xml_version product/etc/permissions/vendor.qti.hardware.data.connection-V1.1-java.xml
+if [ -z "${ONLY_TARGET}" ]; then
+    # Initialize the helper for common device
+    setup_vendor "${DEVICE_COMMON}" "${VENDOR}" "${ANDROID_ROOT}" true "${CLEAN_VENDOR}"
 
-"${MY_DIR}/setup-makefiles.sh"
+    extract "${MY_DIR}/proprietary-files.txt" "${SRC}" "${KANG}" --section "${SECTION}"
+fi
+
+if [ -z "${ONLY_COMMON}" ] && [ -s "${MY_DIR}/../${DEVICE}/proprietary-files.txt" ]; then
+    # Reinitialize the helper for device
+    source "${MY_DIR}/../${DEVICE}/extract-files.sh"
+    setup_vendor "${DEVICE}" "${VENDOR}" "${ANDROID_ROOT}" false "${CLEAN_VENDOR}"
+
+    extract "${MY_DIR}/../${DEVICE}/proprietary-files.txt" "${SRC}" "${KANG}" --section "${SECTION}"
+fi
+
+COMMON_BLOB_ROOT="${ANDROID_ROOT}"/vendor/"${VENDOR}"/"${DEVICE_COMMON}"/proprietary
+
+"${MY_DIR}"/setup-makefiles.sh
